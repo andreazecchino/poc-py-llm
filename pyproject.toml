@@ -1,0 +1,10 @@
+[project]
+name = "py-llm"
+version = "0.1.0"
+description = "Practical proof-of-concept to test AI text generation using constrained computing resources"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.136.3",
+    "ollama>=0.6.2",
+]
