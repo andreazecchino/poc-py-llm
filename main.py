@@ -87,18 +87,18 @@ async def health_check():
 
 
 @app.post("/generate", tags=["Text generation"])
-async def generate_from_ollama(
-    prompt: Prompt,
-):
+async def generate_from_ollama(prompt: Prompt):
     async def generate_chunks():
-        stream = await ollama_client.generate(
-            model=settings.ollama_model,
-            prompt=prompt.text,
-            stream=True,
-            # system=
-        )
-        async for chunk in stream:
-            # print(chunk.response, end="", flush=True)
-            yield chunk.response
+        try:
+            stream = await ollama_client.generate(
+                model=settings.ollama_model,
+                prompt=prompt.text,
+                stream=True,
+            )
+            async for chunk in stream:
+                yield chunk.response
+        except Exception as e:
+            print(f"Error during generation: {str(e)}")
+            yield f"\n[Error: Failed to generate response - {str(e)}]"
 
     return StreamingResponse(generate_chunks(), media_type="text/event-stream")
