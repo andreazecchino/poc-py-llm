@@ -22,10 +22,10 @@ This project showcases a setup for running large language models efficiently on 
 
 ## Key Features
 
-**Lightweight & Efficient** - 4-bit quantized models optimized for resource-constrained environments
-**Containerized** - Docker-based deployment with automated image building
-**Fully Automated** - CI/CD pipeline with GitOps-driven deployments
-**Observable** - Complete monitoring and metrics with Prometheus and Grafana
+- **Lightweight & Efficient** - 4-bit quantized models optimized for resource-constrained environments
+- **Containerized** - Docker-based deployment with automated image building
+- **Fully Automated** - CI/CD pipeline with GitOps-driven deployments
+- **Observable** - Complete monitoring and metrics with Prometheus and Grafana
 
 ## Tech Stack
 
