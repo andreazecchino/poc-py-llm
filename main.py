@@ -85,6 +85,10 @@ def get_session(session_id: str) -> SessionData:
     return session
 
 
+def format_sse(data: dict, event: str) -> str:
+    return f"event: {event}\ndata: {json.dumps(data)}\n\n"
+
+
 tags_metadata = [
     {
         "name": "Health check",
@@ -195,13 +199,14 @@ async def generate_from_ollama(turn: ChatTurn):
                 async for chunk in stream:
                     piece = chunk.message.content
                     reply += piece
-                    yield piece
+                    yield format_sse({"content": piece}, event="message")
             except Exception as e:
                 print(f"Error during generation: {str(e)}")
-                yield f"\n[Error: Failed to generate response - {str(e)}]"
+                yield format_sse({"error": str(e)}, event="error")
                 return
 
             session.messages.append(Message(role=Role.assistant, content=reply))
             session.last_accessed = datetime.now(timezone.utc)
+            yield format_sse({}, event="done")
 
     return StreamingResponse(generate_chunks(), media_type="text/event-stream")
