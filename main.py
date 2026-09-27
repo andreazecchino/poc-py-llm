@@ -184,7 +184,7 @@ async def health_check():
     try:
         await ollama_client.list()
         health_status.services.ollama = "online"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         health_status.status = "unhealthy"
         health_status.services.ollama = f"offline (Error: {e!s})"
 
@@ -202,7 +202,7 @@ async def health_check():
     response_model=SessionCreated,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_chat_session(request: CreateSessionRequest = CreateSessionRequest()):
+async def create_chat_session(request: CreateSessionRequest = CreateSessionRequest()):  # noqa: B008
     return SessionCreated(session_id=create_session(system=request.system))
 
 
@@ -270,7 +270,7 @@ async def generate_from_ollama(turn: ChatTurn, request: Request):
                     piece = chunk.message.content
                     reply += piece
                     yield format_sse({"content": piece}, event="message")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.error(
                     "generation_failed",
                     extra={"session_id": turn.session_id, "error": str(e)},
