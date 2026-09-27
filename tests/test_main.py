@@ -74,7 +74,9 @@ class MainTestCase(unittest.TestCase):
         self.assertEqual(messages[0]["content"], "You are terse.")
 
     def test_generate_unknown_session_returns_404(self):
-        with patch.object(main.ollama_client, "chat", side_effect=fake_chat_success) as chat_mock:
+        with patch.object(
+            main.ollama_client, "chat", side_effect=fake_chat_success
+        ) as chat_mock:
             response = self.client.post(
                 "/generate", json={"session_id": "does-not-exist", "text": "hi"}
             )
