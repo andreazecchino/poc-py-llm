@@ -8,7 +8,7 @@ pipeline {
             }
             steps {
                 echo 'Linting..'
-                sh 'uv python install'
+                // sh 'uv python install'
                 sh 'uvx ruff check .'
                 sh 'uvx ruff format --check .'
             }
