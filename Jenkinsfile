@@ -20,8 +20,22 @@ pipeline {
             steps {
               script {
                 def img = docker.build("poc-py-llm:${env.BUILD_ID}")
-                img.inside {
-                    sh 'python -c "import sys; print(sys.version); print(\'smoke test ok\')"'
+                // img.inside {
+                //     sh 'python -c "import sys; print(sys.version); print(\'smoke test ok\')"'
+                // }
+                image.inside {
+                    sh '''
+                        fastapi run --host 0.0.0.0 --port 8000 main.py &
+                        for i in $(seq 1 30); do
+                            if curl -fsS http://127.0.0.1:8000/docs > /tmp/docs.html; then
+                                grep -q "Swagger UI" /tmp/docs.html
+                                exit 0
+                            fi
+                            sleep 2
+                        done
+                        echo "Docs endpoint failed"
+                        exit 1
+                    '''
                 }
               }
             }
