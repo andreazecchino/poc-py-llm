@@ -23,7 +23,7 @@ pipeline {
                 // img.inside {
                 //     sh 'python -c "import sys; print(sys.version); print(\'smoke test ok\')"'
                 // }
-                image.inside {
+                img.inside {
                     sh '''
                         fastapi run --host 0.0.0.0 --port 8000 main.py &
                         for i in $(seq 1 30); do
