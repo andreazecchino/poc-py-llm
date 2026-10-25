@@ -6,9 +6,12 @@ pipeline {
             agent {
                 docker { image 'ghcr.io/astral-sh/uv:python3.14-trixie-slim' }
             }
+            environment {
+                UV_CACHE_DIR = "${env.WORKSPACE}/.uv-cache"
+                UV_TOOL_DIR = "${env.WORKSPACE}/.uv-tools"
+            }
             steps {
                 echo 'Linting..'
-                // sh 'uv python install'
                 sh 'uvx ruff check .'
                 sh 'uvx ruff format --check .'
             }
