@@ -1,12 +1,13 @@
 pipeline {
-    environment {
-        UV_CACHE_DIR = "${env.WORKSPACE}/.uv-cache"
-        UV_TOOL_DIR = "${env.WORKSPACE}/.uv-tools"
-    }
+    agent any
     stages {
         stage('Lint') {
             agent {
                 docker { image 'ghcr.io/astral-sh/uv:python3.14-trixie-slim' }
+            }
+            environment {
+                UV_CACHE_DIR = "${env.WORKSPACE}/.uv-cache"
+                UV_TOOL_DIR = "${env.WORKSPACE}/.uv-tools"
             }
             steps {
                 echo 'Linting..'
@@ -17,6 +18,10 @@ pipeline {
         stage('Test') {
             agent {
                 docker { image 'ghcr.io/astral-sh/uv:python3.14-trixie-slim' }
+            }
+            environment {
+                UV_CACHE_DIR = "${env.WORKSPACE}/.uv-cache"
+                UV_TOOL_DIR = "${env.WORKSPACE}/.uv-tools"
             }
             steps {
                 echo 'Testing..'
@@ -33,6 +38,7 @@ pipeline {
     post {
         always {
             cleanWs(
+                deleteDirs: true,
                 notFailBuild: true,
                 patterns: [
                     [pattern: '.uv-cache', type: 'INCLUDE'],
