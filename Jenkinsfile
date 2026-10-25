@@ -17,8 +17,17 @@ pipeline {
             }
         }
         stage('Test') {
+            agent {
+                docker { image 'ghcr.io/astral-sh/uv:python3.14-trixie-slim' }
+            }
+            environment {
+                UV_CACHE_DIR = "${env.WORKSPACE}/.uv-cache"
+                UV_TOOL_DIR = "${env.WORKSPACE}/.uv-tools"
+            }
             steps {
                 echo 'Testing..'
+                sh 'uv sync'
+                sh 'uv run python -m unittest discover -s tests -p "test_*.py" -v'
             }
         }
         stage('Build') {
