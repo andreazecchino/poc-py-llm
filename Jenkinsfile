@@ -29,9 +29,14 @@ pipeline {
                 sh 'uv run python -m unittest discover -s tests -p "test_*.py" -v'
             }
         }
-        stage('Build') {
+        stage('Build Docker Image and Test') {
             steps {
-                echo 'Building....'
+              echo 'Building and Testing....'
+              script {
+                docker.build("my-image:${env.BUILD_ID}").inside {
+                    sh 'python -m unittest discover -s tests -p "test_*.py" -v'
+                }
+              }
             }
         }
     }
