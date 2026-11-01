@@ -18,10 +18,13 @@ pipeline {
         }
         stage('Security Scan') {
             agent {
-                docker { image 'aquasec/trivy:0.76.1' }
+                docker {
+                    image 'aquasec/trivy:0.76.1'
+                    args '--entrypoint=""'
+                }
             }
             steps {
-                sh 'trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --ignore-unfixed --exit-code 1 "${env.WORKSPACE"'
+                sh 'trivy fs --cache-dir memory --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --ignore-unfixed --exit-code 1 "$WORKSPACE"'
             }
         }
         stage('Build and Verify Docker Image') {
