@@ -16,6 +16,14 @@ pipeline {
                 sh 'uv run python -m unittest discover -s tests -p "test_*.py" -v'
             }
         }
+        stage('Security Scan') {
+            agent {
+                docker { image 'aquasec/trivy:0.76.1' }
+            }
+            steps {
+                sh 'trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --ignore-unfixed --exit-code 1'
+            }
+        }
         stage('Build and Verify Docker Image') {
             steps {
               script {
