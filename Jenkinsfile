@@ -21,7 +21,7 @@ pipeline {
                 docker { image 'aquasec/trivy:0.76.1' }
             }
             steps {
-                sh 'trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --ignore-unfixed --exit-code 1 .'
+                sh 'trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --ignore-unfixed --exit-code 1 "${env.WORKSPACE"'
             }
         }
         stage('Build and Verify Docker Image') {
