@@ -56,9 +56,15 @@ pipeline {
         stage('Build & Verify Docker Image') {
             steps {
                 script {
-                    def img = docker.build("poc-py-llm:${env.BUILD_ID}")
-                    img.inside {
-                        sh 'python -c "import sys; print(sys.version); print(\'smoke test ok\')"'
+                    docker.withRegistry('https://registry.local') {
+                        def img = docker.build("poc-py-llm:${env.BUILD_ID}")
+                        if (!img) {
+                            error("Docker image build failed")
+                        }
+                        img.push()
+                        img.inside {
+                            sh 'python -c "import sys; print(sys.version); print(\'smoke test ok\')"'
+                        }
                     }
                 }
             }
